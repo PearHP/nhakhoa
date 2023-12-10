@@ -3,14 +3,51 @@ using System;
 using BTL_Lich;
 using System.Collections.Generic;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace BTL_Lich
 {
     public partial class NhaSi : Form
     {
+        string connectionString = "Server=HUYNHPHUC;Database=QLPhongKham;User Id=sa;Password=123;";
         public NhaSi()
         {
             InitializeComponent();
+        }
+        private void LoadDataIntoDataGridView()
+        {
+            try
+            {
+                // Tạo kết nối đến cơ sở dữ liệu
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    //Nha sĩ
+                    // Truy vấn SQL để lấy dữ liệu từ bảng hoặc thủ tục lưu trữ
+                    string query = "SELECT * FROM THUOC";
+                    SqlCommand command1 = new SqlCommand(query, connection);
+
+                    // Sử dụng SqlDataAdapter để lấy dữ liệu từ truy vấn
+                    SqlDataAdapter adapter1 = new SqlDataAdapter(command1);
+                    DataTable dataTable1 = new DataTable();
+
+                    // Đổ dữ liệu vào DataTable
+                    adapter1.Fill(dataTable1);
+
+                    // Gán DataTable vào DataGridView
+                    dataGridView3.DataSource = dataTable1;
+
+                    
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
         }
 
         private void IsClick(object sender, EventArgs e)
@@ -84,15 +121,17 @@ namespace BTL_Lich
             dgvLHKH.DataSource = lishLh;
 
 
-            List<Thuoc> dstt = new List<Thuoc>();
-            Thuoc tt;
-            tt = new Thuoc() { MaThuoc = 1, TenThuoc = "Amoxicillin", SoLuong = 3, TongTien = 150000 };
-            dstt.Add(tt);
-            tt = new Thuoc() { MaThuoc = 2, TenThuoc = "Spiramycin", SoLuong = 4, TongTien = 180000 };
-            dstt.Add(tt);
-            tt = new Thuoc() { MaThuoc = 3, TenThuoc = "Metronidazol", SoLuong = 1, TongTien = 200000 };
-            dstt.Add(tt);
-            dataGridView3.DataSource = dstt;
+            //List<Thuoc> dstt = new List<Thuoc>();
+            //Thuoc tt;
+            //tt = new Thuoc() { MaThuoc = 1, TenThuoc = "Amoxicillin", SoLuong = 3, TongTien = 150000 };
+            //dstt.Add(tt);
+            //tt = new Thuoc() { MaThuoc = 2, TenThuoc = "Spiramycin", SoLuong = 4, TongTien = 180000 };
+            //dstt.Add(tt);
+            //tt = new Thuoc() { MaThuoc = 3, TenThuoc = "Metronidazol", SoLuong = 1, TongTien = 200000 };
+            //dstt.Add(tt);
+            //dataGridView3.DataSource = dstt;
+
+            LoadDataIntoDataGridView();
 
             List<DichVu> sampleDichVuList = new List<DichVu>();
 
